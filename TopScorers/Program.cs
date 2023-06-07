@@ -1,63 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using TopScorers.Calculations;
+using TopScorers.CSVReader;
 
-public class Program
+namespace TopScorers
 {
-    public static void Main(string[] args)
+    public class Program
     {
-        string csvFilePath = "TestData.csv"; // Replace with the actual file path
-
-        Dictionary<string, int> people = new Dictionary<string, int>();
-
-        // Step 1: Read the CSV file
-        string[] csvLines = File.ReadAllLines(csvFilePath);
-
-        // Step 2: Parse the CSV data
-        for (int i = 1; i < csvLines.Length; i++) // Start from index 1 to exclude the header row
+        public static void Main(string[] args)
         {
-            string[] columns = csvLines[i].Split(',');
+            string csvFilePath = "TestData.csv"; // Replace with the actual file path
 
-            if (columns.Length >= 3)
+            // Step 1: Read the CSV file
+            ICSVParser csvParser = new CSVParser();
+            Dictionary<string, int> people = csvParser.Parse(csvFilePath);
+
+
+            // Step 2: Calculate top scorers
+            ITopScorerCalculator topScorerCalculator = new TopScorerCalculator();
+            List<string> topScorers = topScorerCalculator.GetTopScorers(people);
+
+            Console.WriteLine("Your Top Scorers:");
+            foreach (string scorer in topScorers)
             {
-                string firstName = columns[0];
-                string secondName = columns[1];
-                int score;
-
-                if (int.TryParse(columns[2], out score))
-                {
-                    string fullName = $"{firstName} {secondName}";
-                    people[fullName] = score;
-                }
+                Console.WriteLine($"{scorer}: {people[scorer]}");
             }
-        }
 
-        // Step 3: Output the data
-        foreach (KeyValuePair<string, int> person in people)
-        {
-            Console.WriteLine($"{person.Key}: {person.Value}");
-        }
-
-        int maxScore = int.MinValue;
-        List<string> topScorers = new List<string>();
-
-        foreach (KeyValuePair<string, int> person in people)
-        {
-            if (person.Value > maxScore)
-            {
-                maxScore = person.Value;
-                topScorers.Clear(); // Clear the previous top scorers
-                topScorers.Add(person.Key); // Add the new top scorer
-            } else if (person.Value == maxScore)
-            {
-                topScorers.Add(person.Key); // Add additional top scorer with the same score
-            }
-        }
-
-        Console.WriteLine("Given a list, here are your Top Scorers:");
-        foreach (string scorer in topScorers)
-        {
-            Console.WriteLine($"{scorer}: {maxScore}");
         }
     }
 }
