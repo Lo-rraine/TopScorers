@@ -7,15 +7,17 @@ namespace TopScorers
     {
         public static void Main(string[] args)
         {
-            string csvFilePath = "TestData.csv"; // Replace with the actual file path
+            //
+            string csvFilePath = "TestData.csv";
 
             // Step 1: Read the CSV file
             ICSVParser csvParser = new CSVParser();
+
             Dictionary<string, int> people = csvParser.Parse(csvFilePath);
 
 
             // Step 2: Calculate top scorers
-            ITopScorerCalculator topScorerCalculator = new TopScorerCalculator();
+            ITopScorerCalculator topScorerCalculator = new TopScorerCalculator(); //we call this an object
             List<string> topScorers = topScorerCalculator.GetTopScorers(people);
 
             Console.WriteLine("Your Top Scorers:");
