@@ -8,23 +8,27 @@ namespace TopScorers
         public static void Main(string[] args)
         {
             //
-            string csvFilePath = "TestData.csv";
+            string csvFilePath = "TestDataPlus.csv";
 
             // Step 1: Read the CSV file
             ICSVParser csvParser = new CSVParser();
-
-            Dictionary<string, int> people = csvParser.Parse(csvFilePath);
+            var people = csvParser.Parse(csvFilePath);
 
 
             // Step 2: Calculate top scorers
-            ITopScorerCalculator topScorerCalculator = new TopScorerCalculator(); //we call this an object
-            List<string> topScorers = topScorerCalculator.GetTopScorers(people);
+            ITopScorerCalculator topScorerCalculator = new TopScorerCalculator();
+            var topScorerNames = topScorerCalculator.GetTopScorers(people);
+            var maxScore = topScorerCalculator.GetHighestScore(people);
+
 
             Console.WriteLine("Your Top Scorers:");
-            foreach (string scorer in topScorers)
+            Console.WriteLine($"-----------------");
+            foreach (string scorer in topScorerNames)
             {
-                Console.WriteLine($"{scorer}: {people[scorer]}");
+                Console.WriteLine($"{scorer}");
             }
+            Console.WriteLine($"-----------------");
+            Console.WriteLine($"Score: {maxScore}");
 
         }
     }
