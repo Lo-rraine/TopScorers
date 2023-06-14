@@ -1,0 +1,25 @@
+body {
+
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  margin-top: 200px;
+}
+.container {
+  width: 500px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url("./bg-image.jpg");
+  background-size: cover;
+}
+
+.data {
+  margin-top: 100px;
+}
