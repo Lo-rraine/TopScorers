@@ -2,57 +2,67 @@
 {
     public class CSVParser : ICSVParser
     {
-        public Dictionary<string, int> Parse(string filePath)
+        public async Task <Dictionary<string, int>> Parse(string filePath)
         {
             Dictionary<string, int> people = new Dictionary<string, int>();
 
             try
             {
-                string[] csvLines = File.ReadAllLines(filePath);
-                for (int i = 1; i < csvLines.Length; i++) 
+                string[] csvLines = await File.ReadAllLinesAsync(filePath);
+
+                for (int i = 1; i < csvLines.Length; i++)
                 {
                     string[] columns = csvLines[i].Split(',');
 
-                    if (columns.Length >= 3)
+                    try
                     {
-                        string firstName = columns[0];
-                        string secondName = columns[1];
-                        int score;
-
-                        if (int.TryParse(columns[2], out score))
+                        if (columns.Length >= 3)
                         {
-                            string fullName = $"{firstName} {secondName}";
-                            people[fullName] = score;
+                            string firstName = columns[0];
+                            string secondName = columns[1];
+                            int score;
+
+                            try
+                            {
+                                if (int.TryParse(columns[2], out score))
+                                {
+                                    string fullName = $"{firstName} {secondName}";
+                                    people[fullName] = score;
+                                } else
+                                {
+                                    throw new FormatException();
+                                }
+                            }
+
+                            catch (FormatException ex)
+                            {
+                                Console.BackgroundColor = ConsoleColor.Red;
+                                Console.WriteLine($"{ex.Message} value {columns[2]} on row {i}");
+                                Console.ResetColor();
+                                continue;
+                            }
+
                         }
                     }
+                    catch (IndexOutOfRangeException ex)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.WriteLine($"ERROR: {ex.Message} on row {i}");
+                        Console.ResetColor();
+                        continue;
+                    }
                 }
+
             }
             catch (FileNotFoundException ex)
             {
                 Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine($"{ex.Message}");
+                Console.WriteLine($"ERROR: {ex.Message}");
                 Console.ResetColor();
                 Console.WriteLine("Programme aborted");
                 Environment.Exit(1);
             }
-            catch (IOException ex)
-            {
-                // Handle file IO exceptions
-                Console.BackgroundColor = ConsoleColor.Red;          
-                Console.WriteLine($"Error occurred while reading the CSV file: {ex.Message}");
-                Console.ResetColor();
-                Console.WriteLine("Programme aborted");
-                Environment.Exit(1);
-            }
-            catch (Exception ex)
-            {
-                // Handle any other unexpected exceptions
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine($"An error occurred during CSV parsing: {ex.Message}");
-                Console.ResetColor();
-                Console.WriteLine("Programme aborted");
-                Environment.Exit(1);
-            }
+            
             return people;
         }
     }

@@ -2,6 +2,6 @@
 {
     public interface ICSVParser
     {
-        Dictionary<string, int> Parse(string filePath);
+        Task<Dictionary<string, int>> Parse(string filePath);
     }
 }
