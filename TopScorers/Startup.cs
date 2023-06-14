@@ -11,9 +11,9 @@ namespace TopScorers
         public void ConfigureServices(IServiceCollection services)
         {
             // Add GraphQL services
-            services.AddGraphQL(sp => SchemaBuilder.New()
-                .AddQueryType<QueryType>()
-                .Create());
+            services.AddGraphQLServer()
+            .AddQueryType<QueryType>();
+
 
             // Add services
             services.AddSingleton<ICSVParser, CSVParser>();
