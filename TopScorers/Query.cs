@@ -1,5 +1,6 @@
-﻿using HotChocolate;
-using System.Collections.Generic;
+﻿//Query class to define all the resolver methods that should be executed
+//When the corresponding fields are queried in the GraphQL Schema
+
 using TopScorers.CSVReader;
 using TopScorers.Calculations;
 using HotChocolate.Resolvers;
@@ -10,28 +11,25 @@ namespace TopScorers
     {
         private readonly ICSVParser _csvParser;
         private readonly ITopScorerCalculator _topScorerCalculator;
-        public const string  csvFilePath = "TestDataa.csv";
+        public const string  csvFilePath = "TestData.csv";
 
-
-
+        //constructor for dependency injection
         public Query(ICSVParser csvParser, ITopScorerCalculator topScorerCalculator)
         {
             _csvParser = csvParser;
             _topScorerCalculator = topScorerCalculator;
            
         }
-
         
-        public List<string> GetTopScorers(IResolverContext context)
-        {
-           
-            var people = _csvParser.Parse(csvFilePath);
+        public async Task<List<string>> GetTopScorers(IResolverContext context)
+        {          
+            var people = await _csvParser.Parse(csvFilePath);
             return _topScorerCalculator.GetTopScorers(people);
         }
 
-        public int GetHighestScore(IResolverContext context)
+        public async Task<int> GetHighestScore(IResolverContext context)//IResolverContext parameter, provides access to the execution context of the resolver.
         {         
-            var people = _csvParser.Parse(csvFilePath);
+            var people = await _csvParser.Parse(csvFilePath);
             return _topScorerCalculator.GetHighestScore(people);
         }
     }
