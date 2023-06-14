@@ -27,6 +27,14 @@
                     }
                 }
             }
+            catch (FileNotFoundException ex)
+            {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.WriteLine($"{ex.Message}");
+                Console.ResetColor();
+                Console.WriteLine("Programme aborted");
+                Environment.Exit(1);
+            }
             catch (IOException ex)
             {
                 // Handle file IO exceptions
