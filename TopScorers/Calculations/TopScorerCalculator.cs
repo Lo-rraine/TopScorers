@@ -2,42 +2,56 @@
 {
     public class TopScorerCalculator : ITopScorerCalculator
     {
-        public List<string> GetTopScorers(Dictionary<string, int> people)
+        public void ValidateData(Dictionary<string, int> people)
         {
-            //check if people is empty then terminate else continue with the programme
+
             if (people.Count == 0)
             {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine($"ERROR! Corrupted Data file Validate the data in the file :) ");
-                Console.ResetColor();
-                Console.WriteLine("Programme aborted");
-                Environment.Exit(1);
+                throw new ArgumentException("No data available. Validate the data in the file.");
+            }
+        }
+
+        public List<string> GetTopScorers(Dictionary<string, int> people)
+        {
+            ValidateData(people);
+
+            //previous implementation
+            //int maxScore = people.Values.Max();           
+            //List<string> topScorers = people.Where(p => p.Value == maxScore)
+            //                                .Select(p => p.Key)
+            //                                .OrderBy(name => name)
+            //                                .ToList();
+
+            //return topScorers;
+            //Uses the people dictionary to get the names of the highest scorers by applying a filter and projection using LINQ. It returns a List<string> containing the names of the top scorers.
+
+            int maxScore = int.MinValue;
+            List<string> topScorers = new List<string>();
+            foreach (var personScore in people)
+            {
+                if (personScore.Value > maxScore)
+                {
+                    maxScore = personScore.Value;
+                    topScorers.Clear();
+                    topScorers.Add(personScore.Key);
+                } else if (personScore.Value == maxScore)
+                {
+                    topScorers.Add(personScore.Key);
+                }
             }
 
-
-            int maxScore = people.Values.Max();           
-            List<string> topScorers = people.Where(p => p.Value == maxScore)
-                                            .Select(p => p.Key)
-                                            .OrderBy(name => name)
-                                            .ToList();
-
             return topScorers;
-            //Uses the people dictionary to get the names of the highest scorers by applying a filter and projection using LINQ. It returns a List<string> containing the names of the top scorers.
+           
         }
 
         public int GetHighestScore(Dictionary<string, int> people)
         {
-            //check if people is empty then terminate else continue with the programme
-            if (people.Count == 0)
-            {
-                Console.BackgroundColor = ConsoleColor.Red;
-                Console.WriteLine($"ERROR: ERROR! Corrupted Data file. Validate the data in the file.");
-                Console.ResetColor();
-                Console.WriteLine("Programme aborted");
-                Environment.Exit(1);
-            }
-
+            ValidateData(people);
+          
             return people.Values.Max();
+
         }
+
+       
     }
 }
