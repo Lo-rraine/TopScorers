@@ -24,6 +24,7 @@ This will create a directory called "TopScorers" containing the project files. <
 1. To view how the programme works with the different variations of the testData files
     - open program.cs on line 11 and replace the name with the file you would like to use
     - ![image](https://github.com/Lo-rraine/TopScorers/assets/65586580/d84a64c9-0af4-4b6a-8b6e-6925e2f449e3)
+    -mods
 
   
  
